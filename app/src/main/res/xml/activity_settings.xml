@@ -1,0 +1,53 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:sample="http://schemas.android.com/apk/res-auto">
+
+    <com.pavelsikun.seekbarpreference.SeekBarPreference
+            android:defaultValue="80"
+            android:key="YAxisRange"
+            android:summary="The length of the recovery period in between repetitions"
+            android:title="Y Axis Range"
+            sample:msbp_maxValue="220"
+            sample:msbp_measurementUnit="lbs"
+            sample:msbp_minValue="10"
+            sample:msbp_interval="10"/>
+
+    <com.pavelsikun.seekbarpreference.SeekBarPreference
+            android:defaultValue="20"
+            android:key="RepAmount"
+            android:summary="The minimum amount of force to complete a rep"
+            android:title="Repetition Level"
+            sample:msbp_maxValue="200"
+            sample:msbp_measurementUnit="lbs"
+            sample:msbp_minValue="1"/>
+
+    <com.pavelsikun.seekbarpreference.SeekBarPreference
+            android:key="FreeModeXRange"
+            android:summary="The range of the graph during free mode"
+            android:title="Free Mode X Range"
+            sample:msbp_interval="5"
+            sample:msbp_maxValue="60"
+            sample:msbp_measurementUnit="seconds"
+            sample:msbp_minValue="5"
+            android:defaultValue="20"/>
+
+    <com.pavelsikun.seekbarpreference.SeekBarPreference
+        android:key="RestTime"
+        android:summary="The length of the recovery period in between repetitions"
+        android:title="Rest Time"
+        sample:msbp_maxValue="30"
+        sample:msbp_interval="1"
+        sample:msbp_measurementUnit="seconds"
+        sample:msbp_minValue="1"
+        android:defaultValue="3"/>
+
+    <com.pavelsikun.seekbarpreference.SeekBarPreference
+            android:key="RepTime"
+            android:summary="The length of time before a repetition counts"
+            android:title="Repetition Time"
+            sample:msbp_maxValue="10"
+            sample:msbp_measurementUnit="seconds"
+            sample:msbp_interval="1"
+            sample:msbp_minValue="1"
+            android:defaultValue="1"/>
+
+</PreferenceScreen>

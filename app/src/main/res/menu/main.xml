@@ -1,9 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+        -->
+
+    <item
+        android:id="@+id/Pause"
+        android:icon="@drawable/ic_pause_white_24dp"
+        android:title="Pause"
+        app:showAsAction="ifRoom|withText"/>
+
+    <item
+        android:id="@+id/Clear"
+        android:icon="@drawable/ic_clear_white_24dp"
+        android:title="Clear"
+        app:showAsAction="ifRoom|withText"/>
+
+    <item
+        android:id="@+id/Zero"
+        android:icon="@drawable/ic_exposure_zero_white_24dp"
+        android:title="Zero"
+        app:showAsAction="ifRoom|withText"/>
+
+    <!--<item
+            android:id="@+id/Compare"
+            android:icon="@drawable/ic_compare_arrows_white_24dp"
+            android:title="Compare"
+            app:showAsAction="ifRoom|withText"/>-->
+
+
 </menu>
