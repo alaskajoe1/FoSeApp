@@ -4,7 +4,7 @@
     <com.pavelsikun.seekbarpreference.SeekBarPreference
             android:defaultValue="80"
             android:key="YAxisRange"
-            android:summary="The length of the recovery period in between repetitions"
+            android:summary="The range of the y-axis"
             android:title="Y Axis Range"
             sample:msbp_maxValue="220"
             sample:msbp_measurementUnit="lbs"
@@ -21,8 +21,17 @@
             sample:msbp_minValue="1"/>
 
     <com.pavelsikun.seekbarpreference.SeekBarPreference
+            android:defaultValue="5"
+            android:key="LowerThreshold"
+            android:summary="The maximum amount of force the user must go under to complete a rep"
+            android:title="Lower Threshold"
+            sample:msbp_maxValue="100"
+            sample:msbp_measurementUnit="lbs"
+            sample:msbp_minValue="1"/>
+
+    <com.pavelsikun.seekbarpreference.SeekBarPreference
             android:key="FreeModeXRange"
-            android:summary="The range of the graph during free mode"
+            android:summary="The domain of the graph during free mode"
             android:title="Free Mode X Range"
             sample:msbp_interval="5"
             sample:msbp_maxValue="60"

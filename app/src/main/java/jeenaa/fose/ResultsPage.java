@@ -28,6 +28,7 @@ import com.androidplot.xy.*;
 
 import java.io.*;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class ResultsPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
@@ -66,6 +67,7 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+        //compare mode off by default
         compareModeOn = false;
 
 
@@ -90,19 +92,23 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         comparePlot1 = (XYPlot) findViewById(R.id.comparePlot1);            //finds force plot
         comparePlot2 = (XYPlot) findViewById(R.id.comparePlot2);            //finds force plot
         comparePlot3 = (XYPlot) findViewById(R.id.comparePlot3);            //finds force plot
+        //formats plots
         formatGraph(comparePlot1);
         formatGraph(comparePlot2);
         formatGraph(comparePlot3);
 
+        //sets up results table
         resultsTable = (TableLayout) findViewById(R.id.resultsTable);
         resultsTable.setColumnCollapsed(2, true);
         resultsTable.setColumnCollapsed(3, true);
 
 
+        //Blue graphs
         graph1 = new SimpleXYSeries("Force");
         graph2 = new SimpleXYSeries("Force");
         graph3 = new SimpleXYSeries("Force");
 
+        //Red graphs
         graph1b = new SimpleXYSeries("Force");
         graph2b = new SimpleXYSeries("Force");
         graph3b = new SimpleXYSeries("Force");
@@ -114,16 +120,16 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
 
         Bundle extras = getIntent().getExtras();
 
+        //receives graph1 data from the main activity
         double[] graph1X = extras.getDoubleArray("graph1X");
         double[] graph1Y = extras.getDoubleArray("graph1Y");
-        //Log.i("Out", Double.toString(graph1X.length));
 
         for (int i = 0; i < graph1X.length; i++)
         {
-            //Log.i("Data",Double.toString(graph1X[i]) + "," + Double.toString(graph1Y[i]));
             graph1.addLast(graph1X[i], graph1Y[i]);
         }
 
+        //receives graph2 data from the main activity
         double[] graph2X = extras.getDoubleArray("graph2X");
         double[] graph2Y = extras.getDoubleArray("graph2Y");
 
@@ -132,6 +138,7 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
             graph2.addLast(graph2X[i], graph2Y[i]);
         }
 
+        //receives graph3 data from the main activity
         double[] graph3X = extras.getDoubleArray("graph3X");
         double[] graph3Y = extras.getDoubleArray("graph3Y");
 
@@ -145,6 +152,7 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         comparePlot2.addSeries(graph2, forceLine);
         comparePlot3.addSeries(graph3, forceLine);
 
+        //finds all the text vies
         Date = (EditText) findViewById(R.id.dateText);
         Title = (EditText) findViewById(R.id.ExerciseText);
         MaxForce1 = (TextView) findViewById(R.id.MaxForce1);
@@ -166,7 +174,7 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         calculateStats();
 
         Calendar c = Calendar.getInstance();
-        Date.setText(String.format("%tB %te, %tY %tl:%tM %tp", c, c, c, c, c, c));
+        Date.setText(String.format(Locale.US,"%tB %te, %tY %tl:%tM %tp", c, c, c, c, c, c));
     }
 
     public boolean onCreateOptionsMenu(Menu menu)
@@ -184,6 +192,7 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
 
         XYPlot[] Z = new XYPlot[]{comparePlot1, comparePlot2, comparePlot3};
 
+        //updates y axis formatting for all plots
         for(int i = 0; i < 3; i++)
         {
             XYPlot thePlot = Z[i];
@@ -209,8 +218,6 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         }
 
 
-
-
         Log.i("Status", "Resume");
     }
 
@@ -230,6 +237,7 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         return currentMax;
     }
 
+    //finds and returns the maximum of a XYSeries
     private double[] findMax(XYSeries X)
     {
         double[] currentMax = {0,0};
@@ -246,6 +254,8 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         return currentMax;
     }
 
+
+    //formats graph
     private void formatGraph(XYPlot thePlot)
     {
         thePlot.getLayoutManager().remove(thePlot.getLegendWidget());       //removes the legend
@@ -464,6 +474,7 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
 
     }
 
+    //saves a string as a file
     private void saveFile(String name, String contents)
     {
         FileOutputStream fos = null;
@@ -488,6 +499,7 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    //loads file from its name
     private String loadFile(String name)
     {
         StringBuilder buffer = new StringBuilder();
@@ -513,6 +525,7 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
     }
 
 
+    //converts the plots to a string for saving
     private String plotsToString()
     {
         String masterString = "Graph 1: " + graph1.size() + "\n";
@@ -539,6 +552,8 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
             masterString += graph3.getY(i) + "\n";
         }
 
+        Log.d("Title",Title.getText().toString());
+
         masterString += Title.getText().toString() + "\n";
         masterString += Date.getText().toString();
 
@@ -546,6 +561,7 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         return masterString;
     }
 
+    //converts the string back into the plots
     private void stringToPlots(String masterString)
     {
         int graph1Length, graph2Length, graph3Length;
@@ -554,26 +570,17 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         String line = masterString.substring(0, masterString.indexOf('\n'));
         masterString = masterString.substring(masterString.indexOf('\n') + 1);
 
-        //Log.d("A", line);
-        //Log.d("B", Integer.toString(masterString.length()));
-
         graph1Length = Integer.parseInt(line.substring(9));
 
-        //Log.d("Int Parser", line.substring(9));
-        //Log.d("Length", Integer.toString(graph1Length));
-
-
+        //loads in the first graph from the master string
         for (int i = 0; i < graph1Length; i++)
         {
             line = masterString.substring(0, masterString.indexOf('\n') + 1);
-            Log.d("A", line);
-            Log.d("A", Integer.toString(masterString.indexOf('\n')));
 
             a = Double.parseDouble(line.substring(0, line.indexOf(',')));
             b = Double.parseDouble(line.substring(line.indexOf(' '), line.indexOf('\n')));
             graph1.addLast(a, b);
             masterString = masterString.substring(masterString.indexOf('\n') + 1);
-            //Log.i("Check", Double.toString(a) + ", " + Double.toString(b));
         }
 
         line = masterString.substring(0, masterString.indexOf('\n'));
@@ -581,19 +588,15 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
 
         masterString = masterString.substring(masterString.indexOf('\n') + 1);
 
-        //Log.d("Length2", Integer.toString(graph2Length));
-
+        //loads in the second graph from the master string
         for (int i = 0; i < graph2Length; i++)
         {
             line = masterString.substring(0, masterString.indexOf('\n') + 1);
-            //Log.d("A", line);
-            //Log.d("A", Integer.toString(masterString.indexOf('\n')));
 
             a = Double.parseDouble(line.substring(0, line.indexOf(',')));
             b = Double.parseDouble(line.substring(line.indexOf(' '), line.indexOf('\n')));
             graph2.addLast(a, b);
             masterString = masterString.substring(masterString.indexOf('\n') + 1);
-            //Log.i("Check", Double.toString(a) + ", " + Double.toString(b));
         }
 
         line = masterString.substring(0, masterString.indexOf('\n'));
@@ -601,33 +604,22 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
 
         masterString = masterString.substring(masterString.indexOf('\n') + 1);
 
-        //Log.d("Length3", Integer.toString(graph2Length));
-
+        //loads in the third graph from the master string
         for (int i = 0; i < graph3Length; i++)
         {
             line = masterString.substring(0, masterString.indexOf('\n') + 1);
-            //Log.d("A", line);
-            //Log.d("A", Integer.toString(masterString.indexOf('\n')));
 
             a = Double.parseDouble(line.substring(0, line.indexOf(',')));
             b = Double.parseDouble(line.substring(line.indexOf(' '), line.indexOf('\n')));
             graph3.addLast(a, b);
             masterString = masterString.substring(masterString.indexOf('\n') + 1);
-            //Log.i("Check", Double.toString(a) + ", " + Double.toString(b));
         }
-
-        Log.d("masterString:", masterString);
 
         line = masterString.substring(0, masterString.indexOf('\n'));
         plot1Name = line;
 
-
-        Log.d("line:", line);
-
         masterString = masterString.substring(masterString.indexOf('\n') + 1);
         plot1Date = masterString;
-
-        Log.d("masterString:", masterString);
 
         if(!compareModeOn)
         {
@@ -640,6 +632,7 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    //removes all plot data
     private void clearPlotData()
     {
 
@@ -659,6 +652,7 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    //calculates the stats displayed in the table
     private void calculateStats()
     {
         double[] mf1 = findMax(graph1);
@@ -671,19 +665,20 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
 
         if(!compareModeOn)
         {
-            comparePlot1.setTitle(String.format("Trial 1: Max Force = %.1f lbs", mf1[0]));
-            comparePlot2.setTitle(String.format("Trial 2: Max Force = %.1f lbs", mf2[0]));
-            comparePlot3.setTitle(String.format("Trial 3: Max Force = %.1f lbs", mf3[0]));
+            comparePlot1.setTitle(String.format(Locale.US, "Trial 1: Max Force = %.1f lbs", mf1[0]));
+            comparePlot2.setTitle(String.format(Locale.US, "Trial 2: Max Force = %.1f lbs", mf2[0]));
+            comparePlot3.setTitle(String.format(Locale.US, "Trial 3: Max Force = %.1f lbs", mf3[0]));
         }
 
-        MaxForce1.setText(String.format("%.1f lbs at %.1f s", mf1[0], mf1[1]));
-        MaxForce2.setText(String.format("%.1f lbs at %.1f s", mf2[0], mf2[1]));
-        MaxForce3.setText(String.format("%.1f lbs at %.1f s", mf3[0], mf3[1]));
-        OverallMaxForce.setText(String.format("%.1f lbs", maxForce1));
-        AvgMaxForce1.setText(String.format("%.1f lbs", AMF1));
-        COV.setText(String.format("%.4f", CoeffVar));
+        MaxForce1.setText(String.format(Locale.US, "%.1f lbs at %.1f s", mf1[0], mf1[1]));
+        MaxForce2.setText(String.format(Locale.US, "%.1f lbs at %.1f s", mf2[0], mf2[1]));
+        MaxForce3.setText(String.format(Locale.US, "%.1f lbs at %.1f s", mf3[0], mf3[1]));
+        OverallMaxForce.setText(String.format(Locale.US, "%.1f lbs", maxForce1));
+        AvgMaxForce1.setText(String.format(Locale.US, "%.1f lbs", AMF1));
+        COV.setText(String.format(Locale.US, "%.4f", CoeffVar));
     }
 
+    //turns compare mode on
     private void turnCompareOn()
     {
         compareModeOn = true;
@@ -692,6 +687,7 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         graph2b.addFirst(0, 0);
         graph3b.addFirst(0, 0);
 
+        //turns save, load and delete buttons off
         controlMenu.getItem(0).setVisible(false);
         controlMenu.getItem(1).setVisible(false);
         controlMenu.getItem(2).setVisible(false);
@@ -700,11 +696,12 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         plot1Name = Title.getText().toString();
         plot1Date = Date.getText().toString();
 
+        //sets title names, if a graph is already present
         if(graph1.size() > 1)
         {
             Title.setText(plot1Name + "\n" + plot1Date);
         }
-        else
+        else //display click to load
         {
             Title.setText("Click to load!" +"\n");
         }
@@ -746,11 +743,13 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         comparePlot3.redraw();
     }
 
+    //turns compare mode off
     private void turnCompareOff()
     {
         compareModeOn = false;
         clearPlotDatab();
 
+        //turns save, load and delete buttons on
         controlMenu.getItem(0).setVisible(true);
         controlMenu.getItem(1).setVisible(true);
         controlMenu.getItem(2).setVisible(true);
@@ -773,15 +772,16 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
 
 
 
-        comparePlot1.setTitle(String.format("Trial 1: Max Force = %.1f lbs", findMax(graph1)[0]));
-        comparePlot2.setTitle(String.format("Trial 1: Max Force = %.1f lbs", findMax(graph2)[0]));
-        comparePlot3.setTitle(String.format("Trial 1: Max Force = %.1f lbs", findMax(graph3)[0]));
+        comparePlot1.setTitle(String.format(Locale.US, "Trial 1: Max Force = %.1f lbs", findMax(graph1)[0]));
+        comparePlot2.setTitle(String.format(Locale.US, "Trial 1: Max Force = %.1f lbs", findMax(graph2)[0]));
+        comparePlot3.setTitle(String.format(Locale.US, "Trial 1: Max Force = %.1f lbs", findMax(graph3)[0]));
 
+        //removes the red graphs
         comparePlot1.removeSeries(graph1b);
         comparePlot2.removeSeries(graph2b);
         comparePlot3.removeSeries(graph3b);
 
-
+        //collapses the compare chart
         resultsTable.getLayoutParams().width = 800;
         resultsTable.setColumnCollapsed(2, true);
         resultsTable.setColumnCollapsed(3, true);
@@ -806,14 +806,14 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         double averageDeficit = AMF1 - AMF2;
 
 
-        MaxForce1b.setText(String.format("%.1f lbs at %.1f s", mf1[0], mf1[1]));
-        MaxForce2b.setText(String.format("%.1f lbs at %.1f s", mf2[0], mf2[1]));
-        MaxForce3b.setText(String.format("%.1f lbs at %.1f s", mf3[0], mf3[1]));
-        OverallMaxForceb.setText(String.format("%.1f lbs", maxForce2));
-        AvgMaxForce1b.setText(String.format("%.1f lbs", AMF2));
-        COVb.setText(String.format("%.4f", CoeffVar));
-        OverallMaxForceDef.setText(String.format("%.1f lbs", overallDeficit));
-        AvgMaxForceDef.setText(String.format("%.1f lbs", averageDeficit));
+        MaxForce1b.setText(String.format(Locale.US, "%.1f lbs at %.1f s", mf1[0], mf1[1]));
+        MaxForce2b.setText(String.format(Locale.US, "%.1f lbs at %.1f s", mf2[0], mf2[1]));
+        MaxForce3b.setText(String.format(Locale.US, "%.1f lbs at %.1f s", mf3[0], mf3[1]));
+        OverallMaxForceb.setText(String.format(Locale.US, "%.1f lbs", maxForce2));
+        AvgMaxForce1b.setText(String.format(Locale.US, "%.1f lbs", AMF2));
+        COVb.setText(String.format(Locale.US, "%.4f", CoeffVar));
+        OverallMaxForceDef.setText(String.format(Locale.US, "%.1f lbs", overallDeficit));
+        AvgMaxForceDef.setText(String.format(Locale.US, "%.1f lbs", averageDeficit));
     }
 
     public void loadGraphsb()
@@ -846,7 +846,6 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
             public void onClick(View v)
             {
                 //where data is finally loaded
-                //Log.i("Test", loadBox.getText().toString());
                 clearPlotDatab();
                 stringToPlotsb(loadFile(loadBox.getText().toString()));
                 comparePlot1.redraw();
@@ -878,79 +877,57 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         String line = masterString.substring(0, masterString.indexOf('\n'));
         masterString = masterString.substring(masterString.indexOf('\n') + 1);
 
-        //Log.d("A", line);
-        //Log.d("B", Integer.toString(masterString.length()));
-
         graph1Length = Integer.parseInt(line.substring(9));
-
-        //Log.d("Int Parser", line.substring(9));
-        //Log.d("Length", Integer.toString(graph1Length));
-
 
         for (int i = 0; i < graph1Length; i++)
         {
             line = masterString.substring(0, masterString.indexOf('\n') + 1);
-            Log.d("A", line);
-            Log.d("A", Integer.toString(masterString.indexOf('\n')));
 
             a = Double.parseDouble(line.substring(0, line.indexOf(',')));
             b = Double.parseDouble(line.substring(line.indexOf(' '), line.indexOf('\n')));
             graph1b.addLast(a, b);
             masterString = masterString.substring(masterString.indexOf('\n') + 1);
-            //Log.i("Check", Double.toString(a) + ", " + Double.toString(b));
         }
+
 
         line = masterString.substring(0, masterString.indexOf('\n'));
         graph2Length = Integer.parseInt(line.substring(9));
 
         masterString = masterString.substring(masterString.indexOf('\n') + 1);
 
-        //Log.d("Length2", Integer.toString(graph2Length));
-
         for (int i = 0; i < graph2Length; i++)
         {
             line = masterString.substring(0, masterString.indexOf('\n') + 1);
-            //Log.d("A", line);
-            //Log.d("A", Integer.toString(masterString.indexOf('\n')));
 
             a = Double.parseDouble(line.substring(0, line.indexOf(',')));
             b = Double.parseDouble(line.substring(line.indexOf(' '), line.indexOf('\n')));
             graph2b.addLast(a, b);
             masterString = masterString.substring(masterString.indexOf('\n') + 1);
-            //Log.i("Check", Double.toString(a) + ", " + Double.toString(b));
         }
+
 
         line = masterString.substring(0, masterString.indexOf('\n'));
         graph3Length = Integer.parseInt(line.substring(9));
 
         masterString = masterString.substring(masterString.indexOf('\n') + 1);
 
-        //Log.d("Length3", Integer.toString(graph2Length));
-
         for (int i = 0; i < graph3Length; i++)
         {
             line = masterString.substring(0, masterString.indexOf('\n') + 1);
-            //Log.d("A", line);
-            //Log.d("A", Integer.toString(masterString.indexOf('\n')));
 
             a = Double.parseDouble(line.substring(0, line.indexOf(',')));
             b = Double.parseDouble(line.substring(line.indexOf(' '), line.indexOf('\n')));
             graph3b.addLast(a, b);
             masterString = masterString.substring(masterString.indexOf('\n') + 1);
-            //Log.i("Check", Double.toString(a) + ", " + Double.toString(b));
         }
 
-        Log.d("masterString:", masterString);
 
         line = masterString.substring(0, masterString.indexOf('\n'));
         plot2Name = line;
 
-        Log.d("line:", line);
-
         masterString = masterString.substring(masterString.indexOf('\n') + 1);
         plot2Date = masterString;
         Date.setText(plot2Name + "\n" + plot2Date);
-        Log.d("masterString:", masterString);
     }
 
     private void clearPlotDatab()

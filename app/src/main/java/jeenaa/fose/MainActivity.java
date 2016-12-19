@@ -44,7 +44,8 @@ public class MainActivity extends BlunoLibrary
     private double elapsedTime;                 //time elapsed since start of trial
     private XYPlot forcePlot;                   //force plot on main screen
     private SimpleXYSeries forceHistory = null; //the force history graph
-    private SimpleXYSeries FirstLevel = null;   //the lower line for color changes
+    private SimpleXYSeries FirstLevel = null;   //the upper green threshold line
+    private SimpleXYSeries LowerLevel = null;   //the lower threshold for reps
     int HISTORY_SIZE = 1000;                    //number of data points kept (approximately 100s)
     boolean pause = true;                       //whether or not the animation is paused
     Menu controlMenu;                           //the top right menu (play/reset/zero)
@@ -52,13 +53,14 @@ public class MainActivity extends BlunoLibrary
     boolean countdown = false;                  //controls the beginning of the countdown
     String exercise;                            //what exercise the user has selected
     double FirstLevel_value;                    //the value of the first level line
+    double LowerLevel_value;                    //the value of the lower level line
     private NavigationView navigationView;      //the navigation view that makes up the nav drawer
     private Toolbar toolbar = null;             //reference to the nav bar at the top
     private String[] category = null;           //array containing the different exercises
     int repNumber = 0;                          //stores the number of reps
     boolean repReset = true;                    //false once in zone long enough, true once out of zone long enough
-    double repTime;                         //how long they must stay in zone before the rep is counted
-    double restTime;                        //how long they must rest before they can begin another rep
+    double repTime;                             //how long they must stay in zone before the rep is counted
+    double restTime;                            //how long they must rest before they can begin another rep
     double restTimer = 0;                       //keeps track of how long the user has been resting
     double repTimer = 0;                        //keeps track of how long the user has been in the rep zone
     MediaPlayer notificationSound;              //mediaPlayer for playing the default notification noise
@@ -83,6 +85,7 @@ public class MainActivity extends BlunoLibrary
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         FirstLevel_value = preferences.getInt("RepAmount", 0);
+        LowerLevel_value = preferences.getInt("LowerThreshold", 0);
         repTime = preferences.getInt("RepTime", 0);
         restTime = preferences.getInt("RestTime", 0);
 
@@ -189,7 +192,15 @@ public class MainActivity extends BlunoLibrary
         FirstLevel.addFirst(-1, FirstLevel_value);  //adds first point at (-1, FirstLevel_value)
         forcePlot.addSeries(FirstLevel, levelLine); //adds series to plot
 
-        //sets all of the backgroudn pieces to white
+        //format of the line for the lower level line
+        LineAndPointFormatter lowerLevelLine = new LineAndPointFormatter(Color.DKGRAY, null, null, null);
+        lowerLevelLine.getLinePaint().setStrokeWidth(PixelUtils.dpToPix(5));
+
+        LowerLevel = new SimpleXYSeries("Level 1"); //creates new XY series
+        LowerLevel.addFirst(-1, LowerLevel_value);  //adds first point at (-1, FirstLevel_value)
+        forcePlot.addSeries(LowerLevel, lowerLevelLine); //adds series to plot
+
+        //sets all of the background pieces to white
         forcePlot.getBorderPaint().setColor(Color.WHITE);
         forcePlot.getGraphWidget().getBackgroundPaint().setColor(Color.WHITE);
         forcePlot.getBackgroundPaint().setColor(Color.WHITE);
@@ -332,10 +343,16 @@ public class MainActivity extends BlunoLibrary
             //TODO: update the calibration value
             currentForce = ((rawValue - zeroValue) / -20000.0) * 0.827423;
 
-            if(currentForce > 220)
+
+            if(currentForce > 220 && !Nathan.isSpeaking())
             {
-                Nathan.speak("Danger Danger  Device Limit Exceeded. Please Remove Weights. Danger Danger", TextToSpeech.QUEUE_FLUSH, null, null);
+                Nathan.speak("Danger, Device Limit Exceeded!", TextToSpeech.QUEUE_FLUSH, null, null);
             }
+            else if(currentForce > 200 && !Nathan.isSpeaking())
+            {
+                Nathan.speak("Danger, Approaching Device Limit!", TextToSpeech.QUEUE_FLUSH, null, null);
+            }
+
 
             elapsedTime = System.currentTimeMillis() / 1000.0 - startTime;
         }
@@ -381,10 +398,21 @@ public class MainActivity extends BlunoLibrary
             if (exercise.equals("Free Mode"))
             {
                 //prints out current force
-                forcePlot.setTitle(String.format("%.1f lbs", currentForce));
+                forcePlot.setTitle(String.format(Locale.US,"%.1f lbs", currentForce));
+
+                //adds the second point on the the FirstLevel line, making it visible
+                if (FirstLevel.size() == 1)
+                {
+                    FirstLevel.addLast(10000, FirstLevel_value);
+                }
+
+                if(LowerLevel.size() > 1)
+                {
+                    LowerLevel.removeLast();
+                }
 
                 //moves the graph as the line approaches the edge
-                if (elapsedTime > 18)
+                if (elapsedTime > preferences.getInt("FreeModeXRange", 0) * 0.9)
                 {
                     forcePlot.setDomainBoundaries(elapsedTime - preferences.getInt("FreeModeXRange", 0) * 0.9, elapsedTime + preferences.getInt("FreeModeXRange", 0) * 0.1, BoundaryMode.FIXED);
                 }
@@ -403,6 +431,16 @@ public class MainActivity extends BlunoLibrary
             //if max force mode is selected
             if (exercise.equals("Max Force"))
             {
+                if(FirstLevel.size() > 1)
+                {
+                    FirstLevel.removeLast();
+                }
+
+                if(LowerLevel.size() > 1)
+                {
+                    LowerLevel.removeLast();
+                }
+
                 //updates max force value
                 if (currentForce > maxForce)
                 {
@@ -411,7 +449,7 @@ public class MainActivity extends BlunoLibrary
 
 
                 //changes the force plot title to the maximum force for that trial
-                forcePlot.setTitle(String.format("Trial %d of 3           Max Force: %.1f lbs", maxForceCounter, maxForce));
+                forcePlot.setTitle(String.format(Locale.US, "Trial %d of 3           Max Force: %.1f lbs", maxForceCounter, maxForce));
 
                 //talking countdown
                 if (elapsedTime > 5)
@@ -455,6 +493,7 @@ public class MainActivity extends BlunoLibrary
 
                         controlMenu.getItem(1).setTitle("Start New Test");
 
+                        //launches results page and sends force data
                         Intent intent = new Intent("jeenaa.fose.ResultsPage");
                         intent.putExtra("graph1X", graph1X);
                         intent.putExtra("graph1Y", graph1Y);
@@ -509,6 +548,12 @@ public class MainActivity extends BlunoLibrary
                     FirstLevel.addLast(10000, FirstLevel_value);
                 }
 
+                //adds the second point on the the FirstLevel line, making it visible
+                if (LowerLevel.size() == 1)
+                {
+                    LowerLevel.addLast(10000, LowerLevel_value);
+                }
+
                 //if the person is above the target threshold
                 if (currentForce > FirstLevel_value)
                 {
@@ -541,8 +586,8 @@ public class MainActivity extends BlunoLibrary
                     //reset the rep timer
                     repTimer = elapsedTime;
 
-                    //once the patient has rested for "restTime" (i.e. below 5 lbs) it tells the patient to GO
-                    if (currentForce < 5 && (elapsedTime - restTimer) > restTime)
+                    //once the patient has rested for "restTime" (i.e. below LowerLevel_value) it tells the patient to GO
+                    if (currentForce < LowerLevel_value && (elapsedTime - restTimer) > restTime)
                     {
                         repReset = true;
                         notificationSound.start(); //plays noise
@@ -882,7 +927,6 @@ public class MainActivity extends BlunoLibrary
         }
 
         FirstLevel_value = preferences.getInt("RepAmount", 0);
-        //adds the second point on the the FirstLevel line, making it visible
         if (FirstLevel.size() == 2)
         {
             FirstLevel.removeFirst();
@@ -894,6 +938,20 @@ public class MainActivity extends BlunoLibrary
         {
             FirstLevel.removeFirst();
             FirstLevel.addFirst(-1, FirstLevel_value);
+        }
+
+        LowerLevel_value = preferences.getInt("LowerThreshold", 0);
+        if (LowerLevel.size() == 2)
+        {
+            LowerLevel.removeFirst();
+            LowerLevel.removeLast();
+            LowerLevel.addFirst(-1, LowerLevel_value);
+            LowerLevel.addLast(10000, LowerLevel_value);
+        }
+        else
+        {
+            LowerLevel.removeFirst();
+            LowerLevel.addFirst(-1, LowerLevel_value);
         }
 
         if (exercise != null && exercise.equals("Free Mode"))
