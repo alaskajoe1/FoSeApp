@@ -36,7 +36,7 @@ public class MainActivity extends BlunoLibrary
 {
     //Global variable initializations
     public static final String MY_TAG = "outputLog";
-    private int zeroValue = -1;                 //zero value for force sensor offset
+    private double zeroValue = -1;                 //zero value for force sensor offset
     private double startTime = -1;              //start time of trial
     private double countDownTimer = -1;         //timer for the countdown
     private double maxForce;                    //keeps track of maximum force
@@ -49,7 +49,7 @@ public class MainActivity extends BlunoLibrary
     int HISTORY_SIZE = 1000;                    //number of data points kept (approximately 100s)
     boolean pause = true;                       //whether or not the animation is paused
     Menu controlMenu;                           //the top right menu (play/reset/zero)
-    int rawValue;                               //raw value converted from force sensor
+    double rawValue;                               //raw value converted from force sensor
     boolean countdown = false;                  //controls the beginning of the countdown
     String exercise;                            //what exercise the user has selected
     double FirstLevel_value;                    //the value of the first level line
@@ -326,13 +326,14 @@ public class MainActivity extends BlunoLibrary
             startTime = System.currentTimeMillis() / 1000.0;
         }
 
+        Log.i(MY_TAG, theString);
+
         //if the data recieved from the Bluno is the right length
         //TODO: Better error checking here to prevent crashes
-        if (theString.length() > 7)
+        if (theString.length() > 7 && theString.length() < 11)
         {
-            //grabs the first seven digits of the data and converts them into their integer value
-            theString = theString.substring(0, 7);
-            rawValue = Integer.valueOf(theString);
+
+            rawValue = Double.valueOf(theString);
 
             //sets the zero value to the starting value by default
             if (zeroValue == -1)
@@ -341,7 +342,7 @@ public class MainActivity extends BlunoLibrary
             }
 
             //TODO: update the calibration value
-            currentForce = ((rawValue - zeroValue) / -20000.0) * 0.827423;
+            currentForce = (rawValue - zeroValue); // * calibration_value (future option)
 
 
             if(currentForce > 220 && !Nathan.isSpeaking())
