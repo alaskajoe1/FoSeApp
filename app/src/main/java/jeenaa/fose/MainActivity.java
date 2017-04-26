@@ -158,6 +158,10 @@ public class MainActivity extends BlunoLibrary
         forcePlot.getLayoutManager().remove(forcePlot.getLegendWidget());       //removes the legend
         forcePlot.setDomainBoundaries(0, preferences.getInt("FreeModeXRange", 0), BoundaryMode.FIXED);               //Sets x axis boundaries
 
+        //formats margins (0 for nexus 7)
+        forcePlot.getGraphWidget().setMarginBottom(-40);
+        forcePlot.getGraphWidget().setMarginLeft(-40);
+
         //format of the line for the force graph
         LineAndPointFormatter forceLine = new LineAndPointFormatter(Color.BLUE, null, null, null);
         forceLine.getLinePaint().setStrokeWidth(PixelUtils.dpToPix(5));
@@ -213,11 +217,11 @@ public class MainActivity extends BlunoLibrary
 
         //sets up the x-axis format
         forcePlot.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
-        forcePlot.getGraphWidget().getDomainOriginLinePaint().setStrokeWidth(7);
+        forcePlot.getGraphWidget().getDomainOriginLinePaint().setStrokeWidth(4); //7 for N7
 
         //sets up the y-axis format
         forcePlot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
-        forcePlot.getGraphWidget().getRangeOriginLinePaint().setStrokeWidth(7);
+        forcePlot.getGraphWidget().getRangeOriginLinePaint().setStrokeWidth(4); //7 for N7
 
         //formats gridlines
         forcePlot.getGraphWidget().getDomainGridLinePaint().setColor(Color.BLACK);
@@ -240,8 +244,8 @@ public class MainActivity extends BlunoLibrary
         forcePlot.setTitle("Link to FoSe to Start");
         forcePlot.getTitleWidget().getLabelPaint().setTextSize(PixelUtils.dpToPix(40));
         forcePlot.getTitleWidget().getLabelPaint().setColor(Color.BLACK);
-        forcePlot.getTitleWidget().pack();
-        forcePlot.getTitleWidget().position(180, XLayoutStyle.ABSOLUTE_FROM_LEFT, 50, YLayoutStyle.ABSOLUTE_FROM_TOP);
+        forcePlot.getTitleWidget().pack(); //180, ..., 50 for N7
+        forcePlot.getTitleWidget().position(100, XLayoutStyle.ABSOLUTE_FROM_LEFT, 50, YLayoutStyle.ABSOLUTE_FROM_TOP);
         forcePlot.getGraphWidget().setPadding(100, 25, 25, 100);
     }
 

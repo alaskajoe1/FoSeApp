@@ -59,11 +59,11 @@
                         android:background="@android:color/transparent"/>
             </LinearLayout>
 
-
+            <!-- 300 height for N7 -->
             <LinearLayout
                     android:id="@+id/graphs"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="360dp"
                     android:layout_below="@+id/title">
 
                 <com.androidplot.xy.XYPlot
@@ -100,63 +100,63 @@
                          android:background="#668cff"
                          android:id="@+id/resultsTable" android:layout_alignParentEnd="false">
 
-
+                    <!-- 25 sp text size for N7 -->
 
                 <TableRow>
                     <TextView
                             android:text="Trial 1"
                             android:padding="3dip" android:textAlignment="center" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#bbbbbb"/>
+                            android:textSize="28sp" android:background="#bbbbbb"/>
 
                     <TextView
                             android:id="@+id/MaxForce1"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#668cff"/>
+                            android:textSize="28sp" android:background="#668cff"/>
 
                     <TextView
                             android:id="@+id/MaxForce1b"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#ff6666"/>
+                            android:textSize="28sp" android:background="#ff6666"/>
                     <TextView
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#bbbbbb"/>
+                            android:textSize="28sp" android:background="#bbbbbb"/>
                 </TableRow>
 
                 <TableRow>
                     <TextView
                             android:text="Trial 2"
                             android:padding="3dip" android:textAlignment="center" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#bbbbbb"/>
+                            android:textSize="28sp" android:background="#bbbbbb"/>
                     <TextView
                             android:id="@+id/MaxForce2"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#668cff"/>
+                            android:textSize="28sp" android:background="#668cff"/>
                     <TextView
                             android:id="@+id/MaxForce2b"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#ff6666"/>
+                            android:textSize="28sp" android:background="#ff6666"/>
                     <TextView
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#bbbbbb"/>
+                            android:textSize="28sp" android:background="#bbbbbb"/>
                 </TableRow>
 
                 <TableRow>
                     <TextView
                             android:text="Trial 3"
                             android:padding="3dip" android:textAlignment="center" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#bbbbbb"/>
+                            android:textSize="28sp" android:background="#bbbbbb"/>
                     <TextView
                             android:id="@+id/MaxForce3"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#668cff"/>
+                            android:textSize="28sp" android:background="#668cff"/>
                     <TextView
                             android:id="@+id/MaxForce3b"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#ff6666"/>
+                            android:textSize="28sp" android:background="#ff6666"/>
                     <TextView
                             android:text="Deficit"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#bbbbbb"/>
+                            android:textSize="28sp" android:background="#bbbbbb"/>
                 </TableRow>
 
                 <View
@@ -167,38 +167,38 @@
                     <TextView
                             android:text="Max Force"
                             android:padding="3dip" android:textAlignment="center" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#bbbbbb"/>
+                            android:textSize="28sp" android:background="#bbbbbb"/>
                     <TextView
                             android:id="@+id/OverallMaxForce"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#668cff"/>
+                            android:textSize="28sp" android:background="#668cff"/>
                     <TextView
                             android:id="@+id/OverallMaxForceb"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#ff6666"/>
+                            android:textSize="28sp" android:background="#ff6666"/>
                     <TextView
                             android:id="@+id/MaxForceDef"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#bbbbbb"/>
+                            android:textSize="28sp" android:background="#bbbbbb"/>
                 </TableRow>
 
                 <TableRow>
                     <TextView
                             android:text="Avg Max Force"
                             android:padding="3dip" android:textAlignment="center" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#bbbbbb"/>
+                            android:textSize="28sp" android:background="#bbbbbb"/>
                     <TextView
                             android:id="@+id/AvgMaxForce"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#668cff"/>
+                            android:textSize="28sp" android:background="#668cff"/>
                     <TextView
                             android:id="@+id/AvgMaxForceb"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#ff6666"/>
+                            android:textSize="28sp" android:background="#ff6666"/>
                     <TextView
                             android:id="@+id/AvgMaxForceDef"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#bbbbbb"/>
+                            android:textSize="28sp" android:background="#bbbbbb"/>
 
                 </TableRow>
 
@@ -206,18 +206,18 @@
                     <TextView
                             android:text="Coeff of Var"
                             android:padding="3dip" android:textAlignment="center" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#bbbbbb"/>
+                            android:textSize="28sp" android:background="#bbbbbb"/>
                     <TextView
                             android:id="@+id/COV"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#668cff"/>
+                            android:textSize="28sp" android:background="#668cff"/>
                     <TextView
                             android:id="@+id/COVb"
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#ff6666"/>
+                            android:textSize="28sp" android:background="#ff6666"/>
                     <TextView
                             android:padding="3dip" android:textAlignment="textStart" android:textColor="#000000"
-                            android:textSize="25sp" android:background="#bbbbbb"/>
+                            android:textSize="28sp" android:background="#bbbbbb"/>
                 </TableRow>
 
             </TableLayout>

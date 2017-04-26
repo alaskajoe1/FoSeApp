@@ -280,6 +280,10 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
             thePlot.setRangeBoundaries(-20, preferences.getInt("YAxisRange", 0), BoundaryMode.FIXED);//Sets y axis boundaries
         }
 
+        //formats margins (0 for nexus 7)
+        thePlot.getGraphWidget().setMarginBottom(-30);
+        thePlot.getGraphWidget().setMarginLeft(-30);
+
 
         //sets all of the background pieces to white
         thePlot.getBorderPaint().setColor(Color.WHITE);
@@ -294,11 +298,11 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
 
         //sets up the x-axis format
         thePlot.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
-        thePlot.getGraphWidget().getDomainOriginLinePaint().setStrokeWidth(4);
+        thePlot.getGraphWidget().getDomainOriginLinePaint().setStrokeWidth(2);
 
         //sets up the y-axis format
         thePlot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
-        thePlot.getGraphWidget().getRangeOriginLinePaint().setStrokeWidth(4);
+        thePlot.getGraphWidget().getRangeOriginLinePaint().setStrokeWidth(2);
 
         //formats gridlines
         thePlot.getGraphWidget().getDomainGridLinePaint().setColor(Color.BLACK);
@@ -322,8 +326,8 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         thePlot.setTitle("Title");
         thePlot.getTitleWidget().getLabelPaint().setTextSize(PixelUtils.dpToPix(20));
         thePlot.getTitleWidget().getLabelPaint().setColor(Color.BLACK);
-        thePlot.getTitleWidget().pack();
-        thePlot.getTitleWidget().position(130, XLayoutStyle.ABSOLUTE_FROM_LEFT, 50, YLayoutStyle.ABSOLUTE_FROM_TOP);
+        thePlot.getTitleWidget().pack(); //130, ...m, 50
+        thePlot.getTitleWidget().position(40, XLayoutStyle.ABSOLUTE_FROM_LEFT, 39, YLayoutStyle.ABSOLUTE_FROM_TOP);
         thePlot.getGraphWidget().setPadding(50, 15, 15, 50);
     }
 
@@ -732,7 +736,8 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
 
         calculateStatsb();
 
-        resultsTable.getLayoutParams().width = 1500;
+        resultsTable.setBackgroundColor(Color.rgb(187,187,187)); //light gray
+        resultsTable.getLayoutParams().width = 900; //1500 for N7
         resultsTable.setColumnCollapsed(2, false);
         resultsTable.setColumnCollapsed(3, false);
         resultsTable.invalidate();
@@ -782,7 +787,8 @@ public class ResultsPage extends AppCompatActivity implements NavigationView.OnN
         comparePlot3.removeSeries(graph3b);
 
         //collapses the compare chart
-        resultsTable.getLayoutParams().width = 800;
+        resultsTable.setBackgroundColor(Color.rgb(102,140,255)); //light blue
+        resultsTable.getLayoutParams().width = 400; //800 for N7
         resultsTable.setColumnCollapsed(2, true);
         resultsTable.setColumnCollapsed(3, true);
         //resultsTable.invalidate();
